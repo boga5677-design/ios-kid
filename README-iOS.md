@@ -1,36 +1,18 @@
-# PetLingo-ios-1.0.1
+# PetLingo-ios-1.1
 
-這版修正 GitHub Actions 錯誤：
+這版修正 GitHub Actions 找不到指定 iOS Simulator 的問題。
 
-`The directory ... does not contain an Xcode project, workspace or package.`
+原錯誤：
+`Unable to find a device matching the provided destination specifier`
 
-## 修正方式
+修正方式：
+- 不再指定 `iPhone 16e`
+- 不再依賴 `OS:latest`
+- 改用：
+  `-destination 'generic/platform=iOS Simulator'`
 
-上一版只有 `project.yml`，必須先用 XcodeGen 產生 `.xcodeproj`；但 GitHub 的 scheme 掃描步驟在 XcodeGen 之前就執行，因此失敗。
+GitHub Actions 會先列出可用 Simulator，再直接以 generic iOS Simulator 建置，因此不會因 GitHub runner 的機型或 OS 版本不同而失敗。
 
-1.0.1 已直接把真正的 `PetLingoKids.xcodeproj` 放在 Repository 根目錄，所以：
-
-```bash
-xcodebuild -list -json
-```
-
-在 repo 根目錄即可找到 Xcode project。
-
-### 上傳 GitHub 時
-
-ZIP 解壓後，必須讓 GitHub Repository 根目錄直接看到：
-
-- `PetLingoKids.xcodeproj/`
-- `ios/`
-- `.github/`
-- `README-iOS.md`
-
-不要再多包一層 `PetLingo-ios-1.0.1/` 資料夾。
-
-Workflow 會直接使用：
-
-```bash
-xcodebuild -project PetLingoKids.xcodeproj -scheme PetLingoKids ...
-```
-
-不再依賴 XcodeGen。
+版本：
+- CFBundleShortVersionString = 1.1
+- CFBundleVersion = 2
