@@ -1,39 +1,25 @@
-# PetLingo-ios-2.0
+# PetLingo-ios-2.0.1
 
-這版是直接用目前 `ios-kid` 專案重整，不需要建立新的 GitHub Repository。
+這份 ZIP 是直接從你剛上傳的 `ios-kid-main (2).zip` 修正。
 
-## 你要怎麼用
+我已確認你上傳的 Repository ZIP 裡的 `.github/workflows/ios.yml`
+仍是 GitHub 預設的 iOS starter workflow，所以才會一直跑舊的模擬器選擇流程。
 
-最簡單的方法：
+## 這版處理方式
 
-1. 下載本 ZIP。
-2. 解壓縮。
-3. 把解壓後的全部內容直接上傳到目前的 `ios-kid` Repository 根目錄。
-4. 遇到同名檔案時全部覆蓋。
-5. 特別確認 `.github/workflows/` 內只剩 `ios.yml`。
-6. Commit 後到 GitHub Actions 執行：
-   `Build PetLingo iOS 2.0`
+- 刪除 `.github/workflows/` 內所有既有 workflow
+- 只保留一個新的 `.github/workflows/ios.yml`
+- Action 名稱固定為 `Build PetLingo iOS 2.0.1`
+- 使用 `generic/platform=iOS Simulator`
+- 成功後產生 `PetLingo-ios-2.0.1-Simulator`
+- 新增 `WORKFLOW-FIX-2.0.1.txt` 作為上傳成功標記
 
-## 本版重要修正
+## 上傳後請確認
 
-- 已刪除 GitHub 預設 `iOS starter workflow`
-- `.github/workflows/` 只保留一個 `ios.yml`
-- 不再使用 `xcrun xctrace`
-- 不再使用 `build-for-testing`
-- 不再指定 `iPhone 16e`
-- 不再使用 `OS:latest`
-- 改用：
-  `-destination 'generic/platform=iOS Simulator'`
-- 成功後會產生 Artifact：
-  `PetLingo-ios-2.0-Simulator`
+GitHub Repository 根目錄必須看到：
 
-## 正確 Repository 根目錄
+`WORKFLOW-FIX-2.0.1.txt`
 
-應該直接看到：
+並且 `.github/workflows/ios.yml` 開頭必須是：
 
-- `.github/`
-- `PetLingoKids.xcodeproj/`
-- `ios/`
-- `README-iOS.md`
-
-不要再多包一層資料夾。
+`name: Build PetLingo iOS 2.0.1`
