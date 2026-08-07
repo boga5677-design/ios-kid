@@ -1,18 +1,44 @@
-# PetLingo-ios-1.1
+# PetLingo-ios-1.1.1
 
-這版修正 GitHub Actions 找不到指定 iOS Simulator 的問題。
+這版專門處理 GitHub 仍在執行舊版「iOS starter workflow」的問題。
 
-原錯誤：
-`Unable to find a device matching the provided destination specifier`
+你貼出的錯誤中還在執行：
 
-修正方式：
-- 不再指定 `iPhone 16e`
-- 不再依賴 `OS:latest`
-- 改用：
-  `-destination 'generic/platform=iOS Simulator'`
+`xcodebuild build-for-testing ... -destination "platform=iOS Simulator,name=iPhone 16e"`
 
-GitHub Actions 會先列出可用 Simulator，再直接以 generic iOS Simulator 建置，因此不會因 GitHub runner 的機型或 OS 版本不同而失敗。
+這不是 PetLingo 1.1 的新版 Workflow；它是 GitHub 預設 iOS starter workflow 的舊 Build/Test 流程。
 
-版本：
-- CFBundleShortVersionString = 1.1
-- CFBundleVersion = 2
+## 1.1.1 做的修正
+
+- `.github/workflows/ios.yml`
+  - 唯一正式自動建置 Workflow
+  - 使用 `generic/platform=iOS Simulator`
+  - 不指定 iPhone 16e
+  - 不使用 OS:latest
+  - 不執行 build-for-testing
+  - 直接 `clean build`
+- 額外放入並覆蓋常見舊 Workflow 名稱：
+  - `swift.yml`
+  - `xcode.yml`
+  - `build.yml`
+- 上述三個檔案改成「只能手動執行」的停用 Workflow，因此不會再在 push 時跑舊的 iPhone 16e 流程。
+
+## 上傳
+
+ZIP 解壓後，請直接把所有內容上傳到 Repository 根目錄，並確認 GitHub 詢問是否取代既有檔案時選擇取代。
+
+正確自動執行的 Action 名稱應為：
+
+`Build PetLingo iOS 1.1.1`
+
+建置 Log 應看到：
+
+`-destination generic/platform=iOS Simulator`
+
+如果仍看到：
+
+`build-for-testing`
+或
+`name=iPhone 16e`
+
+代表 Repository 還有另一個舊 `.github/workflows/*.yml` 沒有被覆蓋，需要刪除該舊 Workflow。
