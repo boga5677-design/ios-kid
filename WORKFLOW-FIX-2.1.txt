@@ -1,0 +1,2 @@
+Expected workflow: Build PetLingo iOS 2.1
+Destination: generic/platform=iOS Simulator
