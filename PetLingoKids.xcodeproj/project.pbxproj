@@ -3,7 +3,8 @@
 A1 /* Project object */ = {isa = PBXProject; attributes = {LastSwiftUpdateCheck = 2600; LastUpgradeCheck = 2600;}; buildConfigurationList = C1; compatibilityVersion = "Xcode 16.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base); mainGroup = G1; productRefGroup = G2; projectDirPath = ""; projectRoot = ""; targets = (T1);};
 G1 = {isa = PBXGroup; children = (G3, G2); sourceTree = "<group>";};
 G2 = {isa = PBXGroup; children = (P1); name = Products; sourceTree = "<group>";};
-G3 = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (); explicitFileTypes = {}; explicitFolders = (); path = PetLingoKids; sourceTree = "<group>";};
+E1 = {isa = PBXFileSystemSynchronizedBuildFileExceptionSet; membershipExceptions = (Info.plist,); target = T1;};
+G3 = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (E1); explicitFileTypes = {}; explicitFolders = (); path = PetLingoKids; sourceTree = "<group>";};
 P1 = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PetLingoKids.app; sourceTree = BUILT_PRODUCTS_DIR;};
 T1 = {isa = PBXNativeTarget; buildConfigurationList = C2; buildPhases = (S1,R1,F1); buildRules = (); dependencies = (); fileSystemSynchronizedGroups = (G3); name = PetLingoKids; packageProductDependencies = (); productName = PetLingoKids; productReference = P1; productType = "com.apple.product-type.application";};
 S1 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0;};
