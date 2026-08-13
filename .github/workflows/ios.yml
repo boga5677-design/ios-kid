@@ -27,12 +27,13 @@ jobs:
       - name: Show Project
         run: |
           pwd
-          ls -R
           xcodebuild -list -project PetLingoKids.xcodeproj
 
       - name: Build
         run: |
           set -eo pipefail
+
+          rm -rf "$GITHUB_WORKSPACE/DerivedData"
 
           xcodebuild \
             -project PetLingoKids.xcodeproj \
@@ -40,28 +41,32 @@ jobs:
             -configuration Debug \
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath "$GITHUB_WORKSPACE/DerivedData" \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             clean build
 
-      - name: Find App
+      - name: Package App
         run: |
-          APP=$(find ~/Library/Developer/Xcode/DerivedData \
-          -name "PetLingo Kids.app" \
-          | head -1)
+          set -eo pipefail
+
+          PRODUCTS="$GITHUB_WORKSPACE/DerivedData/Build/Products/Debug-iphonesimulator"
+          echo "Build products:"
+          find "$PRODUCTS" -maxdepth 2 -type d -name "*.app" -print || true
+
+          APP=$(find "$PRODUCTS" -maxdepth 1 -type d -name "*.app" | head -1)
 
           echo "APP=$APP"
 
-          if [ -z "$APP" ]; then
-            echo "App not found"
+          if [ -z "$APP" ] || [ ! -d "$APP" ]; then
+            echo "No simulator .app found in $PRODUCTS"
             exit 1
           fi
 
-          ditto -c -k --sequesterRsrc --keepParent \
-          "$APP" \
-          PetLingo-iOS-Simulator.zip
+          ditto -c -k --sequesterRsrc --keepParent "$APP" PetLingo-iOS-Simulator.zip
+          ls -lh PetLingo-iOS-Simulator.zip
 
-      - name: Upload
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: PetLingo-iOS-Simulator
