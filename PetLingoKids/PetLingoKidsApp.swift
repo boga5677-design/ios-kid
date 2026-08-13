@@ -372,6 +372,44 @@ struct Celebration:View{let text:String;var body:some View{ZStack{Color.black.op
 
 func header(_ title:String,_ subtitle:String,_ color:Int)->some View{VStack(spacing:6){Text(title).font(.system(size:32,weight:.black));Text(subtitle).multilineTextAlignment(.center)}.padding(20).frame(maxWidth:.infinity).background(Color(hex:color)).clipShape(RoundedRectangle(cornerRadius:30))}
 
-func pronunciationScore(_ target:String,_ heard:String)->Int{let a=target.lowercased().filter{$0.isLetter};let b=heard.lowercased().filter{$0.isLetter};guard !a.isEmpty,!b.isEmpty else{return 0};let aa=Array(a),bb=Array(b);var costs=Array(0...bb.count);for i in aa.indices{var last=i;costs[0]=i+1;for j in bb.indices{let old=costs[j+1];costs[j+1]=min(costs[j+1]+1,costs[j]+1,last+(aa[i]==bb[j] ? 0:1));last=old}};return max(0,Int(100*(1-Double(costs[bb.count])/Double(max(aa.count,bb.count)))))}
+func pronunciationScore(_ target: String, _ heard: String) -> Int {
+    let normalizedTarget = target.lowercased().filter { $0.isLetter }
+    let normalizedHeard = heard.lowercased().filter { $0.isLetter }
 
+    guard !normalizedTarget.isEmpty, !normalizedHeard.isEmpty else {
+        return 0
+    }
+
+    let targetChars = Array(normalizedTarget)
+    let heardChars = Array(normalizedHeard)
+
+    var costs = Array(0...heardChars.count)
+
+    for targetIndex in targetChars.indices {
+        var previousDiagonal = targetIndex
+        costs[0] = targetIndex + 1
+
+        for heardIndex in heardChars.indices {
+            let previousRowValue = costs[heardIndex + 1]
+            let deletionCost = costs[heardIndex + 1] + 1
+            let insertionCost = costs[heardIndex] + 1
+            let substitutionCost = previousDiagonal +
+                (targetChars[targetIndex] == heardChars[heardIndex] ? 0 : 1)
+
+            costs[heardIndex + 1] = min(
+                deletionCost,
+                insertionCost,
+                substitutionCost
+            )
+            previousDiagonal = previousRowValue
+        }
+    }
+
+    let distance = costs[heardChars.count]
+    let longestLength = max(targetChars.count, heardChars.count)
+    let similarity = 1.0 - (Double(distance) / Double(longestLength))
+    let percentage = Int((similarity * 100.0).rounded())
+
+    return max(0, min(100, percentage))
+}
 extension Color{init(hex:Int){let r=Double((hex>>16)&0xff)/255,g=Double((hex>>8)&0xff)/255,b=Double(hex&0xff)/255;self.init(red:r,green:g,blue:b)}}
